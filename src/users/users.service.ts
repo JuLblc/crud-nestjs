@@ -1,7 +1,7 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { exec } from 'child_process';
 import { Model } from 'mongoose';
+import * as bcrypt from 'bcrypt';
 
 import { User } from './user.model';
 
@@ -9,14 +9,53 @@ import { User } from './user.model';
 export class UsersService {
     constructor(
         @InjectModel('User') private readonly userModel: Model<User>
-    ) {}
+    ) { }
 
     async insertUser(email: string, password: string) {
+
+        // 1. Check username and password are not empty
+        if (!email || !password) {
+            throw new HttpException({
+                status: HttpStatus.BAD_REQUEST,
+                error: 'Please enter email and password'
+            }, HttpStatus.BAD_REQUEST)
+        }
+
+        // 2. Check if email adress is valid
+        const regexEmail = /^([\w-\.]+)@((?:[\w]+\.)+)([a-zA-Z]{2,4})/i;
+        if (!regexEmail.test(email)) {
+            throw new HttpException({
+                status: HttpStatus.FORBIDDEN,
+                error: 'Please enter a valid Email adress'
+            }, HttpStatus.FORBIDDEN)
+        }
+
+        // 3. Check if password is strong enough
+        const regexPassword = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}/;
+        if (!regexPassword.test(password)) {
+            throw new HttpException({
+                status: HttpStatus.FORBIDDEN,
+                error: 'Password should contain at least: 6 caracters, 1 number, 1 uppercase and 1 lowercase'
+            }, HttpStatus.FORBIDDEN)
+        }
+
+        const saltOrRounds = 10;
+        const hash = await bcrypt.hash(password, saltOrRounds);
+
         const newUser = new this.userModel({
             email: email,
-            password: password
+            password: hash
         });
-        const createdUser = await newUser.save();
+
+        let createdUser = await newUser
+            .save()
+            .catch(() => {
+                throw new HttpException({
+                    status: HttpStatus.CONFLICT,
+                    error: 'Email adress already taken'
+                }, HttpStatus.CONFLICT)
+            })
+
         console.log('insertUser result', createdUser)
         return createdUser as User;
     }
@@ -63,9 +102,9 @@ export class UsersService {
     }
 
     async removeUser(userId: string) {
-        const result = await this.userModel.deleteOne({_id: userId}).exec();
-        console.log('removeUser result',result)  
-        if (result.deletedCount === 0){
+        const result = await this.userModel.deleteOne({ _id: userId }).exec();
+        console.log('removeUser result', result)
+        if (result.deletedCount === 0) {
             throw new NotFoundException('Could not find user');
         }
     }
