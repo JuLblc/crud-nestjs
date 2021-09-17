@@ -3,39 +3,41 @@ import { UsersService } from "./users.service";
 
 @Controller('users')
 export class UsersController {
-    constructor(private readonly usersService: UsersService) {
-
-    }
+    constructor(private readonly usersService: UsersService) {}
 
     @Post()
-    addNewUser(
+    async addNewUser(
         @Body('email') userEmail: string,
         @Body('password') userPassword: string
     ) {
-        return this.usersService.insertUser(userEmail, userPassword)
+        const newUser = await this.usersService.insertUser(userEmail, userPassword);
+        return newUser;
     }
 
     @Get()
-    getAllUsers() {
-        return this.usersService.getAllUsers()
+    async getAllUsers() {
+        const users = await this.usersService.getAllUsers()
+        return users;
     }
 
     @Get(':id')
-    getUser(@Param('id') userId: string) {
-        return this.usersService.getUser(userId)
+    async getUser(@Param('id') userId: string) {
+        const user = await this.usersService.getUser(userId);
+        return user;
     }
 
     @Patch(':id')
-    updateUser(
+    async updateUser(
         @Param('id') userId: string,
         @Body('email') userEmail: string,
         @Body('password') userPassword: string
     ) {
-        this.usersService.updateUser(userId, userEmail, userPassword)
+        const user = await this.usersService.updateUser(userId, userEmail, userPassword)
+        return user;
     }
 
     @Delete(':id')
-    removeUser(@Param('id') userId: string) {
-        this.usersService.removeUser(userId)
+    async removeUser(@Param('id') userId: string) {
+        await this.usersService.removeUser(userId)        
     }
 }
