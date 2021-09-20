@@ -70,9 +70,26 @@ export class UsersService {
         })) as User[];
     }
 
-    async getUser(userId: string) {
-        const user = await this.findUser(userId);
-        console.log('getUser result', user)
+    async getUserById(userId: string) {
+        const user = await this.findUserById(userId);
+        console.log('getUserById result', user)
+        return {
+            id: user.id,
+            email: user.email,
+            password: user.password
+        } as User;
+    }
+
+    async getUserByEmail(email: string) {
+        const user = await this.userModel.findOne({ email: email }).exec()
+        
+        console.log('getUserByEmail result', user)
+        if (!user) {
+            throw new HttpException({
+                status: HttpStatus.FORBIDDEN,
+                error: 'Could not find Email Adress'
+            }, HttpStatus.FORBIDDEN)
+        }
         return {
             id: user.id,
             email: user.email,
@@ -85,7 +102,7 @@ export class UsersService {
         email: string,
         password: string,
     ) {
-        const updatedUser = await this.findUser(userId);
+        const updatedUser = await this.findUserById(userId);
 
         if (email) {
             updatedUser.email = email;
@@ -109,7 +126,7 @@ export class UsersService {
         }
     }
 
-    private async findUser(id: string): Promise<User> {
+    private async findUserById(id: string): Promise<User> {
         let user;
 
         try {
