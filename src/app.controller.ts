@@ -3,9 +3,7 @@ import {
   Get,
   Post,
   Body,
-  Param,
   Patch,
-  Delete,
   UseGuards,
   Request} from "@nestjs/common";
 
@@ -56,14 +54,14 @@ export class AppController {
 
   /* UPDATE USER */
   @UseGuards(AuthenticatedGuard)
-  @Patch("user/:id")
+  @Patch('user')
   async updateUser(
-    @Param("id") userId: string,
+    @Request() req,
     @Body("email") userEmail: string,
     @Body("password") userPassword: string
   ) {
     const user = await this.usersService.updateUser(
-      userId,
+      req.user.id,
       userEmail,
       userPassword
     );
