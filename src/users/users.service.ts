@@ -56,13 +56,11 @@ export class UsersService {
                 }, HttpStatus.CONFLICT)
             })
 
-        console.log('insertUser result', createdUser)
         return createdUser as User;
     }
 
     async getAllUsers() {
         const users = await this.userModel.find().exec();
-        console.log('getAllUsers result', users)
         return users.map(user => ({
             id: user.id,
             email: user.email,
@@ -70,9 +68,24 @@ export class UsersService {
         })) as User[];
     }
 
-    async getUser(userId: string) {
-        const user = await this.findUser(userId);
-        console.log('getUser result', user)
+    async getUserById(userId: string) {
+        const user = await this.findUserById(userId);
+        return {
+            id: user.id,
+            email: user.email,
+            password: user.password
+        } as User;
+    }
+
+    async getUserByEmail(email: string) {
+        const user = await this.userModel.findOne({ email: email }).exec()
+        
+        if (!user) {
+            throw new HttpException({
+                status: HttpStatus.FORBIDDEN,
+                error: 'Could not find Email Adress'
+            }, HttpStatus.FORBIDDEN)
+        }
         return {
             id: user.id,
             email: user.email,
@@ -85,7 +98,7 @@ export class UsersService {
         email: string,
         password: string,
     ) {
-        const updatedUser = await this.findUser(userId);
+        const updatedUser = await this.findUserById(userId);
 
         if (email) {
             updatedUser.email = email;
@@ -103,13 +116,12 @@ export class UsersService {
 
     async removeUser(userId: string) {
         const result = await this.userModel.deleteOne({ _id: userId }).exec();
-        console.log('removeUser result', result)
         if (result.deletedCount === 0) {
             throw new NotFoundException('Could not find user');
         }
     }
 
-    private async findUser(id: string): Promise<User> {
+    private async findUserById(id: string): Promise<User> {
         let user;
 
         try {
