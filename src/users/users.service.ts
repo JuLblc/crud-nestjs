@@ -59,24 +59,6 @@ export class UsersService {
         return createdUser as User;
     }
 
-    async getAllUsers() {
-        const users = await this.userModel.find().exec();
-        return users.map(user => ({
-            id: user.id,
-            email: user.email,
-            password: user.password
-        })) as User[];
-    }
-
-    async getUserById(userId: string) {
-        const user = await this.findUserById(userId);
-        return {
-            id: user.id,
-            email: user.email,
-            password: user.password
-        } as User;
-    }
-
     async getUserByEmail(email: string) {
         const user = await this.userModel.findOne({ email: email }).exec()
         
@@ -112,13 +94,6 @@ export class UsersService {
             email: updatedUser.email,
             password: updatedUser.password
         } as User;
-    }
-
-    async removeUser(userId: string) {
-        const result = await this.userModel.deleteOne({ _id: userId }).exec();
-        if (result.deletedCount === 0) {
-            throw new NotFoundException('Could not find user');
-        }
     }
 
     private async findUserById(id: string): Promise<User> {

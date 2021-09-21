@@ -7,10 +7,11 @@ import {
   Patch,
   Delete,
   UseGuards,
-  Request,
-} from "@nestjs/common";
+  Request} from "@nestjs/common";
+
 import { AppService } from "./app.service";
 import { UsersService } from "./users/users.service";
+import { ProductsService } from "./products/products.service";
 import { LocalAuthGuard } from "./auth/local-auth.guard";
 import { AuthenticatedGuard } from "./auth/authenticated.guard";
 
@@ -18,10 +19,11 @@ import { AuthenticatedGuard } from "./auth/authenticated.guard";
 export class AppController {
   constructor(
     private readonly appService: AppService,
-    private readonly usersService: UsersService
+    private readonly usersService: UsersService,
+    private readonly productsService: ProductsService
   ) {}
 
-  @UseGuards(AuthenticatedGuard)
+  /* HOMEPAGE */
   @Get()
   getHello(): string {
     return this.appService.getHello();
@@ -44,19 +46,15 @@ export class AppController {
     return req.user;
   }
 
-  @Get("users")
-  async getAllUsers() {
-    const users = await this.usersService.getAllUsers();
-    return users;
+  /* CALL API */
+  @UseGuards(AuthenticatedGuard)
+  @Get('product')
+  getProduct(@Body("id") productId: string) {
+    const product = this.productsService.getProduct(productId)
+    return product;
   }
 
-  @Get("user/:id")
-  async getUser(@Param("id") userId: string) {
-    const user = await this.usersService.getUserById(userId);
-    return user;
-  }
-
-  // UPDATE USER //
+  /* UPDATE USER */
   @UseGuards(AuthenticatedGuard)
   @Patch("user/:id")
   async updateUser(
@@ -70,11 +68,5 @@ export class AppController {
       userPassword
     );
     return user;
-  }
-
-  // DELETE USER //
-  @Delete("user/:id")
-  async removeUser(@Param("id") userId: string) {
-    await this.usersService.removeUser(userId);
   }
 }
