@@ -5,7 +5,8 @@ import {
   Body,
   Patch,
   UseGuards,
-  Request} from "@nestjs/common";
+  Request
+} from "@nestjs/common";
 
 import { AppService } from "./app.service";
 import { UsersService } from "./users/users.service";
@@ -18,7 +19,7 @@ export class AppController {
   constructor(
     private readonly appService: AppService,
     private readonly usersService: UsersService,
-    private readonly productsService: ProductsService
+    private readonly productsService: ProductsService,
   ) {}
 
   /* HOMEPAGE */
@@ -44,17 +45,24 @@ export class AppController {
     return req.user;
   }
 
-  /* CALL API */
+  /* CALL API 
+    Some products id
+    000000000186
+    000000652734
+    737628064502  
+  */
+  
   @UseGuards(AuthenticatedGuard)
-  @Get('product')
-  getProduct(@Body("id") productId: string) {
-    const product = this.productsService.getProduct(productId)
+  @Get("product")
+  async getProduct(@Body("id") productId: string) {
+    
+    const product = await this.productsService.getProduct(productId);
     return product;
   }
 
   /* UPDATE USER */
   @UseGuards(AuthenticatedGuard)
-  @Patch('user')
+  @Patch("user")
   async updateUser(
     @Request() req,
     @Body("email") userEmail: string,

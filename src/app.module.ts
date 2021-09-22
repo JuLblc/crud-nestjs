@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module , CacheModule } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule } from '@nestjs/config';
 
@@ -16,7 +16,8 @@ import { ProductsModule } from './products/products.module';
       process.env.MONGODB_URI
     ),
     AuthModule,
-    ProductsModule
+    ProductsModule,
+    CacheModule.register()
   ],
   controllers: [AppController],
   providers: [AppService],
