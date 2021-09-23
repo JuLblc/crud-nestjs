@@ -30,13 +30,17 @@
     "@nestjs/platform-express": "^8.0.0",
     "bcrypt": "^5.0.1",
     "cache-manager": "^3.4.4",
+    "connect-mongo": "^3.2.0",
     "express-session": "^1.17.2",
+    "install": "^0.13.0",
     "mongoose": "^6.0.6",
+    "npm": "^7.24.0",
     "passport": "^0.4.1",
     "passport-local": "^1.0.0",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
-    "rxjs": "^7.2.0"
+    "rxjs": "^7.2.0",
+    "uninstall": "0.0.0"
   },
   "devDependencies": {
     "@nestjs/cli": "^8.0.0",
