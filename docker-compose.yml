@@ -38,6 +38,10 @@ services:
   mongo:
     container_name: mongodb
     image: mongo
+    ports:
+      - 21017:2107
+    networks:
+      - nestjs-network
     restart: always
     volumes:
       - mongodata:/data/db
