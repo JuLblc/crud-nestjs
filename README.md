@@ -24,20 +24,36 @@
 
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+<a href='https://github.com/InnovOrder/software-technical-tests/tree/master/crud-nestjs'>Software technical test</a> for Junior Fullstack Developer (NodeJS + Angular/React) position at Innovorder
 
+CRUD nestJs API with MongoDB
+
+# Running the app locally
 ## Installation
 
+If you want to have the app running locally:
+
+- Make sure to have MongoDB
+- Clone this repo
+
 ```bash
+cd your-path/crud-nestjs
 $ npm install
+```
+
+## Configuration .env
+
+See below an exemple of the .env file
+
+```bash
+PORT=3000
+MONGODB_URI=mongodb://localhost:27017/your-DB-name
+SESSION_SECRET=your-session-secret
 ```
 
 ## Running the app
 
 ```bash
-# development
-$ npm run start
-
 # watch mode
 $ npm run start:dev
 
@@ -45,29 +61,20 @@ $ npm run start:dev
 $ npm run start:prod
 ```
 
-## Test
+# Running the Docker containers
+
+- Clone this repo
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+cd your-path/crud-nestjs
 ```
 
-## Support
+```bash
+docker-compose up dev
+```
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+or
 
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).
+```bash
+docker-compose up prod
+```
