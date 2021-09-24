@@ -78,3 +78,36 @@ or
 ```bash
 docker-compose up prod
 ```
+
+# Routes
+
+Home: http://localhost:3000/ </br>
+
+To register a new user: http://localhost:3000/users </br>
+Please provide as JSON
+
+```bash
+{
+    "email":"jdoe@email.com",
+    "password":"YourPassword1"
+}
+```
+
+To log in: http://localhost:3000/sessions </br>
+Please provide as JSON
+
+```bash
+{
+    "username":"jdoe@email.com",
+    "password":"YourPassword1"
+}
+```
+
+To get product detail from API OpenFoodFact: http://localhost:3000/product </br>
+Please provide as JSON
+
+```bash
+{
+    "id":"000000000186"
+}
+```
