@@ -81,9 +81,9 @@ docker-compose up prod
 
 # Routes
 
-Home: http://localhost:3000/ </br>
+Home: GET - http://localhost:3000/ </br>
 
-To register a new user: http://localhost:3000/users </br>
+To register a new user: POST - http://localhost:3000/users </br>
 Please provide as JSON
 
 ```bash
@@ -93,7 +93,7 @@ Please provide as JSON
 }
 ```
 
-To log in: http://localhost:3000/sessions </br>
+To log in: POST - http://localhost:3000/sessions </br>
 Please provide as JSON
 
 ```bash
@@ -103,11 +103,21 @@ Please provide as JSON
 }
 ```
 
-To get product detail from API OpenFoodFact: http://localhost:3000/product </br>
+To get product detail from API OpenFoodFact: GET - http://localhost:3000/product </br>
 Please provide as JSON
 
 ```bash
 {
     "id":"000000000186"
+}
+```
+
+To update user: PATCH - http://localhost:3000/user </br>
+Please provide as JSON the field(s) you would like to update
+
+```bash
+{
+    "email":"update@email.com",
+    "password":"NewPass1"
 }
 ```
